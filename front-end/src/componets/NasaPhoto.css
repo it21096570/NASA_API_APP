@@ -1,0 +1,123 @@
+/* ImageDisplay.css */
+
+/* Gradient background for the entire page */
+body {
+    background-image: url('../images/BI1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.outer-container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.register-button {
+    background-color: #1e1be6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.register-button:hover {
+    background-color: #050649;
+}
+
+.image-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 20px;
+    border: 2px solid #1612ec;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    background-color: rgb(241, 234, 234);
+    transition: transform 0.2s;
+    margin-top: 3%;
+    margin-left: 3%;
+    margin-right: 3%;
+    margin-bottom: 1%;
+    opacity: 0.95;
+}
+
+.image-card:hover {
+    transform: scale(1.02);
+}
+
+.image-photo {
+    width: 30%;
+    height: auto;
+    border-radius: 10px;
+    margin-right: 20px;
+    transition: box-shadow 0.3s;
+}
+
+.image-photo:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.image-info {
+    flex: 1;
+    padding: 10px;
+}
+
+.image-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1d1c1c;
+}
+
+.image-date {
+    font-size: 1.2em;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+.image-explanation {
+    font-size: 1.1em;
+    color: #272727;
+    text-align: justify;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .image-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .image-photo {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .image-info {
+        padding: 0;
+    }
+
+    .image-title {
+        font-size: 1.5em;
+    }
+
+    .image-date,
+    .image-explanation {
+        font-size: 1em;
+    }
+}
