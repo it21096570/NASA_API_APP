@@ -1,16 +1,29 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const router = express.Router();
 const SECRET_KEY = 'mysecretkey'; // Use a strong secret key in production
-const mysql = require('mysql2');
 
-const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: '1234',
-    database: 'nasa-api'
+// Define a User Schema for Mongoose
+const UserSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: true,
+    },
 });
+
+// Create a User Model from the schema
+const User = mongoose.model('User', UserSchema);
 
 // User registration endpoint
 router.post('/register', async (req, res) => {
@@ -20,24 +33,29 @@ router.post('/register', async (req, res) => {
         return res.status(400).json({ error: 'All fields are required' });
     }
 
-    // Hash the password before storing
-    const hashedPassword = await bcrypt.hash(password, 10);
+    try {
+        // Check if the email already exists
+        const existingUser = await User.findOne({ email });
 
-    // Insert the user into the database
-    pool.query(
-        'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
-        [name, email, hashedPassword],
-        (err, results) => {
-            if (err) {
-                if (err.code === 'ER_DUP_ENTRY') {
-                    return res.status(400).json({ error: 'Email already in use' });
-                } else {
-                    return res.status(500).json({ error: 'Server error' });
-                }
-            }
-            res.status(201).json({ message: 'User registered successfully' });
+        if (existingUser) {
+            return res.status(400).json({ error: 'Email already in use' });
         }
-    );
+
+        // Hash the password before storing
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create and save a new user
+        const newUser = new User({
+            name,
+            email,
+            password: hashedPassword,
+        });
+
+        await newUser.save();
+        res.status(201).json({ message: 'User registered successfully' });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
 });
 
 // User login endpoint
@@ -48,17 +66,13 @@ router.post('/login', async (req, res) => {
         return res.status(400).json({ error: 'All fields are required' });
     }
 
-    // Find the user by email
-    pool.query('SELECT * FROM users WHERE email = ?', [email], async (err, results) => {
-        if (err) {
-            return res.status(500).json({ error: 'Server error' });
-        }
+    try {
+        // Find the user by email
+        const user = await User.findOne({ email });
 
-        if (results.length === 0) {
+        if (!user) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
-
-        const user = results[0];
 
         // Compare the password with the hashed password in the database
         const isMatch = await bcrypt.compare(password, user.password);
@@ -68,9 +82,16 @@ router.post('/login', async (req, res) => {
         }
 
         // Generate a JSON Web Token (JWT)
-        const token = jwt.sign({ userName: user.name, userId: user.id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
+        const token = jwt.sign(
+            { userName: user.name, userId: user._id, email: user.email },
+            SECRET_KEY,
+            { expiresIn: '1h' }
+        );
+
         res.json({ message: 'Login successful', token, user });
-    });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error' });
+    }
 });
 
 module.exports = router;

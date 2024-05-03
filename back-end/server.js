@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+const mongoose = require('mongoose');
 const userRoutes = require('./routes/user');
 const express = require('express');
 const cors = require('cors');
@@ -17,24 +17,15 @@ app.use(express.json());
 app.use(cors(corsOptions));
 app.use('/user', userRoutes);
 
+const mongoURI = 'mongodb+srv://thanuja:fU9UNzunKlAfADxE@cluster0.0ckqiu2.mongodb.net/nasa-api';
+
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('MongoDB connected…'))
+    .catch((err) => console.error('Error connecting to MongoDB:', err));
+
+
 app.get('/', (req, res) => {
     res.send('Welcome to the Node.js backend!');
-});
-
-const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: '1234',
-    database: 'nasa-api'
-});
-
-pool.getConnection((err, connection) => {
-    if (err) {
-        console.error('Error connecting to database:', err);
-    } else {
-        console.log('Connected to MySQL database');
-        connection.release();
-    }
 });
 
 app.listen(PORT, () => {
