@@ -16,7 +16,7 @@ const Login = () => {
 
         try {
             // Send POST request to the backend with registration data
-            const response = await axios.post('http://localhost:8081/user/login', {
+            const response = await axios.post('https://nasa-api-app.onrender.com/user/login', {
                 email,
                 password,
             });

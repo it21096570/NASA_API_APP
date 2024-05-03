@@ -16,7 +16,7 @@ function Register() {
 
     try {
       // Send POST request to the backend with registration data
-      const response = await axios.post('http://localhost:8081/user/register', {
+      const response = await axios.post('https://nasa-api-app.onrender.com/user/register', {
         name,
         email,
         password,
