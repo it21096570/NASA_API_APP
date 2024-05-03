@@ -7,7 +7,7 @@ const PORT = 8081;
 
 
 const corsOptions = {
-    origin: 'https://nasa-api-app-it21096570.netlify.app', // Change this to your frontend URL
+    origin: 'http://localhost:3000', // Change this to your frontend URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
 };
