@@ -15,6 +15,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 function LandingPage() {
     const navigate = useNavigate();
+    const storedUserName = localStorage.getItem('userName');
 
     const handleNasaPhoto = () => {
         navigate('/nasaphoto');
@@ -26,6 +27,7 @@ function LandingPage() {
 
     const handleLogout = () => {
         localStorage.removeItem('authToken');
+        localStorage.removeItem('userName');
         navigate('/'); // Redirect to the login page
     };
 
@@ -50,8 +52,12 @@ function LandingPage() {
                 <Toolbar>
                     <RocketLaunchIcon sx={{ mr: 1 }} />
                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                        NASA Explorer
                     </Typography>
+                    {storedUserName && (
+                        <Typography variant="h8" sx={{ mr: 2 }} style={{ backgroundColor: 'white', color: 'black', padding: '10px', borderRadius: '5px' }}>
+                            Hello, {storedUserName}
+                        </Typography>
+                    )}
                     <Button color="inherit" onClick={handleLogout}>
                         <LogoutIcon sx={{ mr: 1 }} />
                         Log Out

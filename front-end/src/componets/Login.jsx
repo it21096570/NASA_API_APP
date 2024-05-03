@@ -11,17 +11,22 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+
     const handleLogin = async (e) => {
         e.preventDefault();
 
         try {
+
+            console.log(email);
+            console.log(password);
             // Send POST request to the backend with registration data
             const response = await axios.post('https://nasa-api-app.onrender.com/user/login', {
                 email,
                 password,
             });
 
-            console.log(response);
+            console.log(response.data.user.name);
+            localStorage.setItem('userName', response.data.user.name);
 
             // If the registration is successful
             if (response.status === 200) {
